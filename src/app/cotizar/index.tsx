@@ -1,12 +1,12 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-const index = () => {
+const Cotizar = () => {
   return (
     <View>
-      <Text>index</Text>
+      <Text>Seguro salud Flexible</Text>
     </View>
   )
 }
 
-export default index
+export default Cotizar
