@@ -1,3 +1,4 @@
+import { useAuth } from "@/src/context/AuthContext";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -65,23 +66,31 @@ export default function Cotizar() {
     setErrors(newErrors);
   };
 
-  const onSubmit = () => {
+  const { login } = useAuth();
+
+  const onSubmit = async () => {
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-
+    setTimeout(async () => {
       if (
         errors.document ||
         errors.phoneNumber ||
         !formData.acceptPrivacyPolicy
       ) {
-        alert("Por favor corrige los errores antes de continuar.");
+        setLoading(false);
+        alert("Corrige los errores antes de continuar.");
         return;
       }
-
-      router.push("/planes");
-
+      
+      try {
+        await login(formData.documentNumber);
+        router.push("/(protected)/planes");
+      } catch (error) {
+        console.error('Error durante el login:', error);
+        alert("Error al iniciar sesión. Por favor, intenta nuevamente.");
+      } finally {
+        setLoading(false);
+      }
     }, 1500);
   };
 

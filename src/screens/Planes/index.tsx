@@ -1,9 +1,11 @@
+import { useAuth } from "@/src/context/AuthContext";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PlanCardSlider from "./Components/PlanesCardSlider";
 
 export default function Planes() {
   const [selectedOption, setSelectedOption] = useState("");
+  const { user } = useAuth();
 
   const options = [
     {
@@ -28,7 +30,7 @@ export default function Planes() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#fff" }} contentContainerStyle={{ padding: 20 }}>
       {/* TITULO */}
-      <Text style={styles.title}>Rocío ¿Para quién deseas cotizar?</Text>
+      <Text style={styles.title}>{user?.name} ¿Para quién deseas cotizar?</Text>
 
       {/* SUBTÍTULO */}
       <Text style={styles.subtitle}>
