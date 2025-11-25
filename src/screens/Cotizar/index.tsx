@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import CotizarForm from "./Components/CotizarForm";
@@ -79,8 +80,7 @@ export default function Cotizar() {
         return;
       }
 
-      console.log("Formulario enviado:", formData);
-      alert("Cotización enviada 🚀");
+      router.push("/planes");
 
     }, 1500);
   };
