@@ -1,41 +1,24 @@
+import { PlanItem } from "@/src/api/plans/plans.types";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const fakePlans = [
-  {
-    name: "Plan en Casa",
-    price: 39,
-    icon: require("@/assets/icons/IcHomeLight.png"),
-    description: [
-      "Médico general a domicilio por S/20 y medicinas cubiertas al 100%.",
-      "Videoconsulta y orientación telefónica al 100% en medicina general + pediatría.",
-      "Indemnización de S/300 en caso de hospitalización por más de un día.",
-    ],
-  },
-  {
-    name: "Plan en Casa y Clínica",
-    price: 59,
-    icon: require("@/assets/icons/IcHospitalLight.png"),
-    description: [
-      "Cobertura en clínicas afiliadas.",
-      "Atención de emergencias las 24 horas.",
-      "Incluye laboratorio y rayos X.",
-    ],
-  },
-  {
-    name: "Plan Premium",
-    price: 89,
-    icon: require("@/assets/icons/IcHomeLight.png"),
-    description: [
-      "Atención ilimitada.",
-      "Hab. privada en hospitalización.",
-      "Cobertura completa + especialistas.",
-    ],
-  },
-];
+interface PlanCardSliderProps {
+  plans: PlanItem[];
+  loading: boolean;
+  selectedOption: string;
+}
 
-export default function PlanCardSlider() {
+// Mapeo de iconos para cada plan
+const planIcons: { [key: string]: any } = {
+  "Plan en Casa": require("@/assets/icons/IcHomeLight.png"),
+  "Plan en Casa y Clínica": require("@/assets/icons/IcHospitalLight.png"),
+  "Plan en Casa + Bienestar": require("@/assets/icons/IcHomeLight.png"),
+  "Plan en Casa + Chequeo": require("@/assets/icons/IcHomeLight.png"),
+  "Plan en Casa + Fitness": require("@/assets/icons/IcHomeLight.png"),
+};
+
+export default function PlanCardSlider({ plans, loading, selectedOption }: PlanCardSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleScroll = (event: any) => {
@@ -44,6 +27,23 @@ export default function PlanCardSlider() {
     );
     setCurrentIndex(index);
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#EB004A" />
+        <Text style={styles.loadingText}>Cargando planes...</Text>
+      </View>
+    );
+  }
+
+  if (plans.length === 0) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>No hay planes disponibles</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ marginTop: 32 }}>
@@ -54,29 +54,28 @@ export default function PlanCardSlider() {
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
       >
-        {fakePlans.map((plan, index) => (
+        {plans.map((plan: PlanItem, index: number) => (
           <View key={index} style={styles.card}>
             {/* Title */}
             <View style={styles.headerRow}>
               <Text style={styles.planName}>{plan.name}</Text>
-              <Image source={plan.icon} style={styles.icon} />
+              <Image 
+                source={planIcons[plan.name] || require("@/assets/icons/IcHomeLight.png")} 
+                style={styles.icon} 
+              />
             </View>
 
             {/* Cost */}
             <Text style={styles.costLabel}>COSTO DEL PLAN</Text>
-            <Text style={styles.price}>S/{plan.price} al mes</Text>
+            <Text style={styles.price}>S/{plan.price.toFixed(2)} al mes</Text>
 
             {/* Divider */}
             <View style={styles.divider} />
 
             {/* Description list */}
             <View>
-              {plan.description.map((item, i) => (
+              {plan.description.map((item: string, i: number) => (
                 <View key={i} style={styles.bulletRow}>
-                  {/* <Image
-                    source={require("@/assets/icons/check-circle.png")}
-                    style={styles.bulletIcon}
-                  /> */}
                   <Text style={styles.descText}>{item}</Text>
                 </View>
               ))}
@@ -96,18 +95,8 @@ export default function PlanCardSlider() {
       {/* Pagination */}
       <View style={styles.pagination}>
         <Text style={styles.pageText}>
-          {currentIndex + 1} / {fakePlans.length}
+          {currentIndex + 1} / {plans.length}
         </Text>
-
-        {/* <TouchableOpacity
-          disabled={currentIndex === fakePlans.length - 1}
-          onPress={() => setCurrentIndex((prev) => Math.min(prev + 1, fakePlans.length - 1))}
-        >
-          <Image
-            style={styles.arrow}
-            source={require("@/assets/icons/arrow-right.png")}
-          />
-        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -197,5 +186,17 @@ const styles = StyleSheet.create({
   arrow: {
     width: 22,
     height: 22,
+  },
+  loadingContainer: {
+    marginTop: 32,
+    padding: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: "#666666",
+    textAlign: "center",
   },
 });

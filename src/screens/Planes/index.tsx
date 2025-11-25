@@ -1,3 +1,5 @@
+import { plansService } from "@/src/api/plans/plans.service";
+import { PlanItem } from "@/src/api/plans/plans.types";
 import { useAuth } from "@/src/context/AuthContext";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -5,6 +7,8 @@ import PlanCardSlider from "./Components/PlanesCardSlider";
 
 export default function Planes() {
   const [selectedOption, setSelectedOption] = useState("");
+  const [plans, setPlans] = useState<PlanItem[]>([]);
+  const [loadingPlans, setLoadingPlans] = useState(false);
   const { user } = useAuth();
 
   const options = [
@@ -22,9 +26,30 @@ export default function Planes() {
     },
   ];
 
+  const loadPlans = async (selectedOption: string) => { 
+    setLoadingPlans(true);
+    try {
+      const response = await plansService.getPlans();
+      
+      const processedPlans = response.list.map(plan => ({
+        ...plan,
+        price: selectedOption === "para-alguien-mas" 
+          ? parseFloat((plan.price * 0.95).toFixed(2))
+          : plan.price
+      }));
+      
+      setPlans(processedPlans);
+    } catch (error) {
+      console.error('Error al cargar planes:', error);
+    } finally {
+      setLoadingPlans(false);
+    }
+  };
+
   const handleSelect = (value: string) => {
     setSelectedOption(value);
-
+    // Cargar planes cuando se selecciona una opción
+    loadPlans(value);
   };
 
   return (
@@ -68,8 +93,16 @@ export default function Planes() {
         ))}
       </View>
 
-
-      <PlanCardSlider/>
+      {/* PLAN CARD SLIDER - Solo se muestra si hay una opción seleccionada */}
+      {selectedOption && (
+        <View style={{ marginTop: 32 }}>
+          <PlanCardSlider 
+            plans={plans} 
+            loading={loadingPlans}
+            selectedOption={selectedOption}
+          />
+        </View>
+      )}
     </ScrollView>
   );
 }
