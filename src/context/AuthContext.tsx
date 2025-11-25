@@ -5,22 +5,27 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 interface AuthContextType {
   user: any;
   token: string | null;
-  login: (document: string) => Promise<void>;
+  selectedPlan: any;
+  login: (document: string, phoneNumber?: string, documentType?: string) => Promise<void>;
   logout: () => Promise<void>;
+  setSelectedPlan: (plan: any) => void;
   loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   token: null,
+  selectedPlan: null,
   login: async () => {},
   logout: async () => {},
+  setSelectedPlan: () => {},
   loading: true,
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   // Load stored session
@@ -39,21 +44,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // LOGIN
-  const login = async (document: string) => {
+  const login = async (document: string, phoneNumber?: string, documentType?: string) => {
     try {
-      // 1. Obtener usuario del backend
       const apiUser = await userService.getUser();
 
-      // 2. Generar token fake
+      const userWithFormData = {
+        ...apiUser,
+        documentNumber: document,
+        phoneNumber: phoneNumber,
+        documentType: documentType
+      };
+
       const fakeToken = "token_" + new Date().getTime();
 
-      // 3. Actualizar estados globales
-      setUser(apiUser);
+      setUser(userWithFormData);
       setToken(fakeToken);
 
-      // 4. Guardar en SecureStore
       await SecureStore.setItemAsync("token", fakeToken);
-      await SecureStore.setItemAsync("user", JSON.stringify(apiUser));
+      await SecureStore.setItemAsync("user", JSON.stringify(userWithFormData));
     } catch (error) {
       console.error('Error en login:', error);
       throw error;
@@ -70,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, selectedPlan, login, logout, setSelectedPlan, loading }}>
       {children}
     </AuthContext.Provider>
   );

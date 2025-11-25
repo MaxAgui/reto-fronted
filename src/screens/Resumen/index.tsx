@@ -1,30 +1,21 @@
-import { useState } from "react";
+import { useAuth } from "@/src/context/AuthContext";
+import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function ResumenScreen() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { user, selectedPlan } = useAuth();
 
-  // 🔥 Data fake
-  const user = {
-    name: "Rocio",
-    lastName: "Miranda Díaz",
-    documentType: "DNI",
-    documentNumber: "444888888",
-    phoneNumber: "5130216147",
-  };
+  // Usar el plan seleccionado o uno por defecto
+  const plan = selectedPlan;
 
-  const plan = {
-    name: "Plan en Casa y Clínica",
-    price: 99,
-  };
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 2000);
-
-  //   return () => clearTimeout(timeout);
-  // }, []);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20 }}>
@@ -60,7 +51,7 @@ export default function ResumenScreen() {
                 style={styles.userIcon}
               />
               <Text style={styles.userName}>
-                {user.name} {user.lastName}
+                {user?.name ?? ''} {user?.lastName ?? ''}
               </Text>
             </View>
 
@@ -69,14 +60,14 @@ export default function ResumenScreen() {
             {/* RESPONSABLE DE PAGO */}
             <Text style={styles.sectionTitle}>Responsable de pago</Text>
             <Text style={styles.sectionText}>
-              {user.documentType}: {user.documentNumber}
+              {user?.documentType ?? ''}: {user?.documentNumber ?? ''}
             </Text>
-            <Text style={styles.sectionText}>Celular: {user.phoneNumber}</Text>
+            <Text style={styles.sectionText}>Celular: {user?.phoneNumber ?? ''}</Text>
 
             {/* PLAN ELEGIDO */}
             <Text style={[styles.sectionTitle, { marginTop: 16 }]}>Plan elegido</Text>
-            <Text style={styles.sectionText}>{plan.name}</Text>
-            <Text style={styles.sectionText}>Costo del Plan: S/{plan.price} al mes</Text>
+            <Text style={styles.sectionText}>{plan?.name ?? ''}</Text>
+            <Text style={styles.sectionText}>Costo del Plan: S/{plan?.price.toFixed(2)} al mes</Text>
           </>
         )}
       </View>

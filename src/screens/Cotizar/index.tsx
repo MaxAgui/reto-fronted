@@ -83,7 +83,7 @@ export default function Cotizar() {
       }
       
       try {
-        await login(formData.documentNumber);
+        await login(formData.documentNumber, formData.phoneNumber, formData.documentType);
         router.push("/(protected)/planes");
       } catch (error) {
         console.error('Error durante el login:', error);

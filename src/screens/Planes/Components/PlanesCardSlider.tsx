@@ -1,4 +1,5 @@
 import { PlanItem } from "@/src/api/plans/plans.types";
+import { useAuth } from "@/src/context/AuthContext";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -20,12 +21,18 @@ const planIcons: { [key: string]: any } = {
 
 export default function PlanCardSlider({ plans, loading, selectedOption }: PlanCardSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { setSelectedPlan } = useAuth();
 
   const handleScroll = (event: any) => {
     const index = Math.round(
       event.nativeEvent.contentOffset.x / 300 // ancho de la card
     );
     setCurrentIndex(index);
+  };
+
+  const handleSelectPlan = (plan: PlanItem) => {
+    setSelectedPlan(plan);
+    router.push("/(protected)/resumen");
   };
 
   if (loading) {
@@ -84,7 +91,7 @@ export default function PlanCardSlider({ plans, loading, selectedOption }: PlanC
             {/* Button */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() => router.push("/(protected)/resumen")}
+              onPress={() => handleSelectPlan(plan)}
             >
               <Text style={styles.buttonText}>Seleccionar plan</Text>
             </TouchableOpacity>
