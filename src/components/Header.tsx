@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
   phoneText: {
     marginLeft: 8,
     fontSize: 16,
-    fontWeight: "700",
+    // fontWeight: "700",
+    color: "#03050F",
+    fontFamily: "br-sonoma-bold",
   },
 });

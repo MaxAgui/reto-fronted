@@ -1,4 +1,5 @@
 import { useAuth } from "@/src/context/AuthContext";
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -71,27 +72,49 @@ export default function Cotizar() {
   const onSubmit = async () => {
     setLoading(true);
 
-    setTimeout(async () => {
-      if (
-        errors.document ||
-        errors.phoneNumber ||
-        !formData.acceptPrivacyPolicy
-      ) {
-        setLoading(false);
-        alert("Corrige los errores antes de continuar.");
-        return;
-      }
-      
-      try {
-        await login(formData.documentNumber, formData.phoneNumber, formData.documentType);
-        router.push("/(protected)/planes");
-      } catch (error) {
-        console.error('Error durante el login:', error);
-        alert("Error al iniciar sesión. Por favor, intenta nuevamente.");
-      } finally {
-        setLoading(false);
-      }
-    }, 1500);
+    // Validar campos vacíos y errores
+    const validationErrors = [];
+
+    // Validar documento
+    if (!formData.documentNumber || formData.documentNumber.trim() === "") {
+      validationErrors.push("• Ingresa tu número de documento");
+    } else if (errors.document) {
+      validationErrors.push("• Corrige el número de documento");
+    }
+
+    // Validar celular
+    if (!formData.phoneNumber || formData.phoneNumber.trim() === "") {
+      validationErrors.push("• Ingresa tu número de celular");
+    } else if (errors.phoneNumber) {
+      validationErrors.push("• Corrige el número de celular");
+    }
+
+    // Validar políticas
+    if (!formData.acceptPrivacyPolicy) {
+      validationErrors.push("• Acepta la Política de Privacidad");
+    }
+
+    if (!formData.acceptCommercialCommunications) {
+      validationErrors.push("• Acepta la Política de Comunicaciones Comerciales");
+    }
+
+    // Si hay errores, mostrar mensaje claro
+    if (validationErrors.length > 0) {
+      setLoading(false);
+      const errorMessage = "Para continuar debes completar:\n\n" + validationErrors.join("\n");
+      alert(errorMessage);
+      return;
+    }
+
+    try {
+      await login(formData.documentNumber, formData.phoneNumber, formData.documentType);
+      router.push("/(protected)/planes");
+    } catch (error) {
+      console.error('Error durante el login:', error);
+      alert("Error al iniciar sesión. Por favor, intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -101,9 +124,14 @@ export default function Cotizar() {
     >
       <View style={styles.row}>
         <View style={styles.left}>
-          <View style={styles.tag}>
+          <LinearGradient
+            colors={['#00F4E2', '#00FF7F']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.tag}
+          >
             <Text style={styles.tagText}>Seguro Salud Flexible</Text>
-          </View>
+          </LinearGradient>
 
           <View style={styles.info}>
             <Text style={styles.title}>Creado para ti y tu familia</Text>
@@ -139,9 +167,8 @@ export default function Cotizar() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingBottom: 40,
-    backgroundColor: "#fff",
   },
 
   row: {
@@ -157,39 +184,40 @@ const styles = StyleSheet.create({
   },
 
   tag: {
-    backgroundColor: "#EDEAF2",
     alignSelf: "flex-start",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
   },
 
   tagText: {
-    color: "#4D4D4D",
-    fontWeight: "600",
+    color: "#03050F",
+    fontFamily: "br-sonoma-bold",
     fontSize: 12,
   },
 
   info: {
-    marginTop: 12,
+    marginTop: 8,
+    marginRight: 12,
   },
 
   title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#333333",
+    fontSize: 28,
+    fontFamily: "br-sonoma-bold",
+    color: "#03050F",
   },
 
   subtitle: {
     marginTop: 6,
     fontSize: 14,
-    color: "#666666",
+    color: "#03050F",
     maxWidth: "90%",
+    fontFamily: "br-sonoma-bold",
   },
 
   headerImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 12,
+    width: 136,
+    height: 160,
+    borderRadius: 16,
   },
 });

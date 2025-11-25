@@ -1,14 +1,16 @@
 import { useState } from "react";
 import {
+  Image,
   Modal,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import DocumentInput from "./DocumentInput";
+import PhoneInput from "./PhoneInput";
 
 interface Props {
   formData: any;
@@ -32,60 +34,23 @@ export default function CotizarForm({
   return (
     <View style={{ marginTop: 24 }}>
 
-      <Text style={styles.label}>Tipo de documento</Text>
-      <View style={styles.selectBox}>
-        {["DNI", "RUC"].map((item) => (
-          <Pressable
-            key={item}
-            onPress={() => onInputChange("documentType", item)}
-            style={[
-              styles.selectOption,
-              formData.documentType === item && styles.selectOptionActive,
-            ]}
-          >
-            <Text
-              style={[
-                styles.selectOptionText,
-                formData.documentType === item && styles.selectOptionTextActive,
-              ]}
-            >
-              {item}
-            </Text>
-          </Pressable>
-        ))}
+      <DocumentInput
+        formData={formData}
+        documentMaxLength={documentMaxLength}
+        errors={errors}
+        onInputChange={onInputChange}
+      />
+
+      <View style={{ marginTop: 16, marginBottom: 24 }}>
+        <PhoneInput
+          value={formData.phoneNumber}
+          onChangeText={(text) => onInputChange("phoneNumber", text)}
+          error={errors.phoneNumber}
+        />
+        {errors.phoneNumber ? (
+          <Text style={styles.errorMsg}>{errors.phoneNumber}</Text>
+        ) : null}
       </View>
-
-      <Text style={styles.label}>Nro. de documento</Text>
-      <TextInput
-        style={[styles.input, errors.document && styles.inputError]}
-        placeholder="Ingresa tu número"
-        keyboardType="numeric"
-        maxLength={documentMaxLength}
-        value={formData.documentNumber}
-        onChangeText={(text) => {
-          const clean = text.replace(/[^0-9]/g, "");
-          onInputChange("documentNumber", clean);
-        }}
-      />
-      {errors.document ? (
-        <Text style={styles.errorMsg}>{errors.document}</Text>
-      ) : null}
-
-      <Text style={[styles.label, { marginTop: 16 }]}>Celular</Text>
-      <TextInput
-        style={[styles.input, errors.phoneNumber && styles.inputError]}
-        placeholder="Ingresa tu celular"
-        keyboardType="phone-pad"
-        maxLength={9}
-        value={formData.phoneNumber}
-        onChangeText={(text) => {
-          const clean = text.replace(/[^0-9]/g, "");
-          onInputChange("phoneNumber", clean);
-        }}
-      />
-      {errors.phoneNumber ? (
-        <Text style={styles.errorMsg}>{errors.phoneNumber}</Text>
-      ) : null}
 
       <Pressable
         onPress={() =>
@@ -101,7 +66,14 @@ export default function CotizarForm({
             styles.checkbox,
             formData.acceptPrivacyPolicy && styles.checkboxChecked,
           ]}
-        />
+        >
+          {formData.acceptPrivacyPolicy && (
+            <Image
+              source={require("@/assets/icons/check-white.png")}
+              style={styles.checkIcon}
+            />
+          )}
+        </View>
         <Text style={styles.checkboxLabel}>
           Acepto la Política de Privacidad
         </Text>
@@ -121,7 +93,14 @@ export default function CotizarForm({
             styles.checkbox,
             formData.acceptCommercialCommunications && styles.checkboxChecked,
           ]}
-        />
+        >
+          {formData.acceptCommercialCommunications && (
+            <Image
+              source={require("@/assets/icons/check-white.png")}
+              style={styles.checkIcon}
+            />
+          )}
+        </View>
         <Text style={styles.checkboxLabel}>
           Acepto la Política Comunicaciones Comerciales
         </Text>
@@ -129,7 +108,7 @@ export default function CotizarForm({
 
       <TouchableOpacity
         onPress={() => setShowModal(true)}
-        style={{ marginTop: 12 }}
+        style={{ marginTop: 16 }}
       >
         <Text style={styles.link}>
           Aplican Términos y Condiciones.
@@ -156,12 +135,11 @@ export default function CotizarForm({
           <View style={styles.modalContent}>
             <ScrollView>
               <Text style={styles.modalTitle}>
-                Aplican Términos y Condiciones
+                Términos y Condiciones
               </Text>
 
               <Text style={styles.modalText}>
-                Encontrarás información importante sobre tus derechos y
-                obligaciones al utilizar nuestros servicios...
+                Al continuar, declaras que la información proporcionada es verdadera y autorizas el uso de tus datos para evaluar y gestionar la solicitud del servicio. Aceptas nuestras Políticas de Privacidad, así como los términos y condiciones aplicables.
               </Text>
 
               <TouchableOpacity
@@ -232,43 +210,54 @@ const styles = StyleSheet.create({
   checkboxRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
   },
+
   checkbox: {
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderColor: "#888",
+    borderColor: "#0A051E",
     borderRadius: 4,
     marginRight: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
+
   checkboxChecked: {
     backgroundColor: "#000",
-    borderColor: "#000",
   },
+
   checkboxLabel: {
-    fontSize: 14,
-    color: "#333",
+    fontSize: 12,
+    color: "#0A051E",
+    fontFamily: "br-sonoma-medium",
+  },
+
+  checkIcon: {
+    width: 16,
+    height: 16,
+    resizeMode: "contain",
   },
 
   link: {
     fontSize: 12,
-    color: "#333",
+    color: "#03050F",
     textDecorationLine: "underline",
-    fontWeight: "600",
+    fontFamily: "br-sonoma-bold",
   },
 
   button: {
-    marginTop: 24,
-    backgroundColor: "#000",
+    marginTop: 36,
+    backgroundColor: "#03050F",
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: 40,
   },
+
   buttonText: {
     textAlign: "center",
     color: "white",
-    fontWeight: "700",
-    fontSize: 16,
+    fontFamily: "br-sonoma-bold",
+    fontSize: 18,
   },
 
   modalBackdrop: {
