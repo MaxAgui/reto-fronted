@@ -1,12 +1,10 @@
+import Cotizar from '@/src/screens/Cotizar'
 import React from 'react'
-import { Text, View } from 'react-native'
 
-const Cotizar = () => {
+const CotizarScreen = () => {
   return (
-    <View>
-      <Text>Seguro salud Flexible</Text>
-    </View>
+    <Cotizar/>    
   )
 }
 
-export default Cotizar
+export default CotizarScreen
