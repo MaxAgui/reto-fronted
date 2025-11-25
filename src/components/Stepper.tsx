@@ -1,6 +1,5 @@
-import { ChevronLeft } from "lucide-react-native";
 import { useEffect, useRef } from "react";
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
   currentStep: number; // 1 o 2
@@ -26,8 +25,12 @@ export default function Stepper({ currentStep, onBackPress }: Props) {
   return (
     <View style={styles.container}>
       {/* Botón atrás */}
-      <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
-        <ChevronLeft size={16} color="#4A3AFF" />
+      <TouchableOpacity onPress={onBackPress}>
+        <Image
+          source={require("@/assets/icons/button-circle-icon.png")}
+          style={{ width: 24, height: 24 }}
+          resizeMode="contain"
+        />
       </TouchableOpacity>
 
       {/* Paso + barra */}
@@ -51,16 +54,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "#EEE",
-  },
-
-  backButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: "#4A3AFF",
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   stepContainer: {

@@ -1,9 +1,9 @@
-import React from 'react'
+import ResumenScreen from "@/src/screens/Resumen"
 
-const ResumenScreen = () => {
+const Resumen = () => {
   return (
     <ResumenScreen/>
   )
 }
 
-export default ResumenScreen
+export default Resumen
