@@ -6,7 +6,6 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacit
 interface PlanCardSliderProps {
   plans: PlanItem[];
   loading: boolean;
-  selectedOption: string;
 }
 
 // Mapeo de iconos para cada plan
@@ -18,7 +17,7 @@ const planIcons: { [key: string]: any } = {
   "Plan en Casa + Fitness": require("@/assets/icons/IcHomeLight.png"),
 };
 
-export default function PlanCardSlider({ plans, loading, selectedOption }: PlanCardSliderProps) {
+export default function PlanCardSlider({ plans, loading }: PlanCardSliderProps) {
   const { setSelectedPlan } = useAuth();
 
   const handleSelectPlan = (plan: PlanItem) => {
@@ -44,7 +43,7 @@ export default function PlanCardSlider({ plans, loading, selectedOption }: PlanC
   }
 
   return (
-    <View style={{ marginTop: 32 }}>
+    <View>
       <ScrollView
         horizontal
         pagingEnabled

@@ -84,7 +84,6 @@ export default function Planes() {
           <PlanCardSlider
             plans={plans}
             loading={loadingPlans}
-            selectedOption={selectedOption}
           />
         </View>
       )}

@@ -78,9 +78,10 @@ export default function ResumenScreen() {
 const styles = StyleSheet.create({
   title: {
     fontSize: 32,
-    fontWeight: "900",
-    marginBottom: 20,
-    color: "#111",
+    fontWeight: "700",
+    marginBottom: 40,
+    color: "#141938",
+    textAlign: "center",
   },
   card: {
     backgroundColor: "#FFF",
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 1,
     fontWeight: "900",
-    color: "#555",
+    color: "#141938",
   },
   userRow: {
     flexDirection: "row",
@@ -104,29 +105,30 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   userIcon: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     marginRight: 12,
   },
   userName: {
     fontSize: 20,
-    fontWeight: "900",
-    color: "#333",
+    fontWeight: "700",
+    color: "#141938",
   },
   divider: {
     height: 1,
-    backgroundColor: "#EEE",
+    backgroundColor: "#D7DBF5",
     marginVertical: 16,
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "900",
-    color: "#333",
+    fontWeight: "700",
+    color: "#141938",
     marginTop: 8,
   },
   sectionText: {
     fontSize: 14,
-    color: "#444",
+    fontWeight: "400",
+    color: "#141938",
     marginTop: 4,
   },
   shimmer: {
