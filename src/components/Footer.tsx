@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     backgroundColor: "#03050F",
-    paddingVertical: 24,
+    paddingVertical: 10,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -31,14 +31,14 @@ const styles = StyleSheet.create({
   logo: {
     width: 140,
     height: 40,
-    marginBottom: 20,
+    marginBottom: 4,
   },
 
   separator: {
     width: "85%",
     height: 1,
     backgroundColor: "#2B304E",
-    marginBottom: 24,
+    marginBottom: 10,
   },
 
   copy: {

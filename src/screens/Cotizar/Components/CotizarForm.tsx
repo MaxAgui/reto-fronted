@@ -1,32 +1,33 @@
+import { CotizarFormData } from "@/src/types/form.types";
 import { useState } from "react";
+import { Control, Controller, FieldErrors } from "react-hook-form";
 import {
-  Image,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    Image,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from "react-native";
-import DocumentInput from "./DocumentInput";
-import PhoneInput from "./PhoneInput";
+import ControlledDocumentInput from "./ControlledDocumentInput";
+import ControlledPhoneInput from "./ControlledPhoneInput";
 
 interface Props {
-  formData: any;
-  errors: any;
+  control: Control<CotizarFormData>;
+  errors: FieldErrors<CotizarFormData>;
   loading: boolean;
   documentMaxLength: number;
-  onInputChange: (name: string, value: string | boolean) => void;
+  onDocumentTypeChange: (value: "DNI" | "RUC") => void;
   onSubmit: () => void;
 }
 
 export default function CotizarForm({
-  formData,
+  control,
   errors,
   loading,
   documentMaxLength,
-  onInputChange,
+  onDocumentTypeChange,
   onSubmit,
 }: Props) {
   const [showModal, setShowModal] = useState(false);
@@ -34,77 +35,76 @@ export default function CotizarForm({
   return (
     <View style={{ marginTop: 24 }}>
 
-      <DocumentInput
-        formData={formData}
-        documentMaxLength={documentMaxLength}
+      <ControlledDocumentInput
+        control={control}
         errors={errors}
-        onInputChange={onInputChange}
+        documentMaxLength={documentMaxLength}
+        onDocumentTypeChange={onDocumentTypeChange}
       />
 
       <View style={{ marginTop: 16, marginBottom: 24 }}>
-        <PhoneInput
-          value={formData.phoneNumber}
-          onChangeText={(text) => onInputChange("phoneNumber", text)}
-          error={errors.phoneNumber}
+        <ControlledPhoneInput
+          control={control}
+          errors={errors}
         />
-        {errors.phoneNumber ? (
-          <Text style={styles.errorMsg}>{errors.phoneNumber}</Text>
-        ) : null}
+        {errors.phoneNumber && (
+          <Text style={styles.errorText}>
+            {errors.phoneNumber.message}
+          </Text>
+        )}
       </View>
 
-      <Pressable
-        onPress={() =>
-          onInputChange(
-            "acceptPrivacyPolicy",
-            !formData.acceptPrivacyPolicy
-          )
-        }
-        style={styles.checkboxRow}
-      >
-        <View
-          style={[
-            styles.checkbox,
-            formData.acceptPrivacyPolicy && styles.checkboxChecked,
-          ]}
-        >
-          {formData.acceptPrivacyPolicy && (
-            <Image
-              source={require("@/assets/icons/check-white.png")}
-              style={styles.checkIcon}
-            />
+      <View style={styles.checkboxContainer}>
+        <Controller
+          control={control}
+          name="acceptPrivacyPolicy"
+          rules={{ required: "Acepta la Política de Privacidad" }}
+          render={({ field: { onChange, value } }) => (
+            <TouchableOpacity
+              style={styles.checkboxRow}
+              onPress={() => onChange(!value)}
+            >
+              <View style={[styles.checkbox, value && styles.checkboxChecked]}>
+                {value && (
+                  <Image
+                    source={require("@/assets/images/check.png")}
+                    style={styles.checkIcon}
+                  />
+                )}
+              </View>
+              <Text style={styles.checkboxText}>
+                Acepto la Política de Privacidad
+              </Text>
+            </TouchableOpacity>
           )}
-        </View>
-        <Text style={styles.checkboxLabel}>
-          Acepto la Política de Privacidad
-        </Text>
-      </Pressable>
+        />
+      </View>
 
-      <Pressable
-        onPress={() =>
-          onInputChange(
-            "acceptCommercialCommunications",
-            !formData.acceptCommercialCommunications
-          )
-        }
-        style={[styles.checkboxRow, { marginTop: 12 }]}
-      >
-        <View
-          style={[
-            styles.checkbox,
-            formData.acceptCommercialCommunications && styles.checkboxChecked,
-          ]}
-        >
-          {formData.acceptCommercialCommunications && (
-            <Image
-              source={require("@/assets/icons/check-white.png")}
-              style={styles.checkIcon}
-            />
+      <View style={styles.checkboxContainer}>
+        <Controller
+          control={control}
+          name="acceptCommercialCommunications"
+          rules={{ required: "Acepta la Política de Comunicaciones Comerciales" }}
+          render={({ field: { onChange, value } }) => (
+            <TouchableOpacity
+              style={styles.checkboxRow}
+              onPress={() => onChange(!value)}
+            >
+              <View style={[styles.checkbox, value && styles.checkboxChecked]}>
+                {value && (
+                  <Image
+                    source={require("@/assets/images/check.png")}
+                    style={styles.checkIcon}
+                  />
+                )}
+              </View>
+              <Text style={styles.checkboxText}>
+                Acepto la Política de Comunicaciones Comerciales
+              </Text>
+            </TouchableOpacity>
           )}
-        </View>
-        <Text style={styles.checkboxLabel}>
-          Acepto la Política Comunicaciones Comerciales
-        </Text>
-      </Pressable>
+        />
+      </View>
 
       <TouchableOpacity
         onPress={() => setShowModal(true)}
@@ -225,6 +225,23 @@ const styles = StyleSheet.create({
 
   checkboxChecked: {
     backgroundColor: "#000",
+  },
+
+  checkboxContainer: {
+    marginBottom: 16,
+  },
+
+  checkboxText: {
+    fontSize: 12,
+    color: "#0A051E",
+    fontFamily: "br-sonoma-medium",
+    flex: 1,
+  },
+
+  errorText: {
+    color: "#E53935",
+    fontSize: 12,
+    marginTop: 4,
   },
 
   checkboxLabel: {

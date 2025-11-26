@@ -1,12 +1,15 @@
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen, usePathname } from "expo-router";
 import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import { AuthProvider } from "../context/AuthContext";
 
 export default function RootLayout() {
+  const pathname = usePathname();
+  const isCotizarPage = pathname?.includes('/cotizar');
+
   const [loaded] = useFonts({
     "br-sonoma-black": require("@/assets/fonts/br-sonoma/BRSonoma-Black.otf"),
     "br-sonoma-bold": require("@/assets/fonts/br-sonoma/BRSonoma-Bold.otf"),
@@ -25,14 +28,16 @@ export default function RootLayout() {
     <AuthProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={[{ flex: 1 }, styles.container]}>
+          {/* Blur superior solo en cotizar */}
+          {isCotizarPage && (
+            <Image 
+              source={require('@/assets/images/blur-asset1.png')} 
+              style={styles.blurAssetTopRight}
+            />
+          )}
+          
           <Header />
-
-          <Stack
-            screenOptions={{
-              headerShown: false, // Ocultamos el header nativo
-              contentStyle: styles.container
-            }}
-          />
+          <Slot/>
         </View>
       </SafeAreaView>
     </AuthProvider>
@@ -42,5 +47,13 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fafbff"
-  }
+  },
+  blurAssetTopRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 200,
+    height: 200,
+    zIndex: 0,
+  },
 })

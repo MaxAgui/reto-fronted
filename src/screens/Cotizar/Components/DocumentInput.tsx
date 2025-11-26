@@ -29,9 +29,8 @@ export default function DocumentInput({
   onInputChange,
 }: DocumentInputProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const labelAnimation = useRef(new Animated.Value(formData.documentNumber ? 1 : 0)).current;
-  
+
   const documentTypes = [
     { value: "DNI", label: "DNI" },
     { value: "RUC", label: "RUC" }
@@ -51,12 +50,10 @@ export default function DocumentInput({
   };
 
   const handleFocus = () => {
-    setIsFocused(true);
     animateLabel(1);
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
     if (!formData.documentNumber) {
       animateLabel(0);
     }
@@ -74,20 +71,20 @@ export default function DocumentInput({
     <View style={styles.wrapper}>
       <View style={[styles.container, errors.document && styles.errorBorder]}>
         {/* SELECTOR */}
-        <Pressable 
-          style={styles.selector} 
+        <Pressable
+          style={styles.selector}
           onPress={() => setIsDropdownOpen(true)}
         >
           <Text style={styles.selectorText}>{formData.documentType}</Text>
-          <Ionicons 
-            name={isDropdownOpen ? "chevron-up" : "chevron-down"} 
-            size={18} 
-            color="#03050F" 
+          <Ionicons
+            name={isDropdownOpen ? "chevron-up" : "chevron-down"}
+            size={18}
+            color="#03050F"
           />
         </Pressable>
 
         {/* SEPARATOR */}
-        <View style={styles.separator} />
+        <View style={[styles.separator, errors.document && styles.separatorError]} />
 
         {/* INPUT CONTAINER WITH FLOATING LABEL */}
         <View style={styles.inputContainer}>
@@ -103,7 +100,7 @@ export default function DocumentInput({
                   inputRange: [0, 1],
                   outputRange: [16, 12],
                 }),
-                color: isFocused ? "#007AFF" : "#888",
+                color: "#5E6488",
               },
             ]}
           >
@@ -146,7 +143,7 @@ export default function DocumentInput({
           ))}
         </View>
       )}
-      
+
       {/* ERROR MESSAGE */}
       {errors.document && (
         <Text style={styles.errorMsg}>{errors.document}</Text>
@@ -165,10 +162,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#B8BED0",
+    borderColor: "#5E6488",
     borderRadius: 12,
-    backgroundColor: "#F9FAFE",
-    height: 52,
+    height: 56,
     overflow: "hidden",
   },
 
@@ -179,8 +175,9 @@ const styles = StyleSheet.create({
   selector: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    gap: 4,
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    width: 120,
     height: "100%",
   },
 
@@ -192,8 +189,12 @@ const styles = StyleSheet.create({
 
   separator: {
     width: 1,
-    height: "70%",
-    backgroundColor: "#B8BED0",
+    height: "100%",
+    backgroundColor: "#5E6488",
+  },
+
+  separatorError: {
+    backgroundColor: "#FF4D4F",
   },
 
   inputContainer: {

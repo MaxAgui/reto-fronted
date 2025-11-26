@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Animated,
   StyleSheet,
@@ -13,7 +13,6 @@ interface PhoneInputProps {
 }
 
 export default function PhoneInput({ value, onChangeText, error }: PhoneInputProps) {
-  const [isFocused, setIsFocused] = useState(false);
   const labelAnimation = useRef(new Animated.Value(value ? 1 : 0)).current;
 
   const animateLabel = (toValue: number) => {
@@ -25,12 +24,10 @@ export default function PhoneInput({ value, onChangeText, error }: PhoneInputPro
   };
 
   const handleFocus = () => {
-    setIsFocused(true);
     animateLabel(1);
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
     if (!value) {
       animateLabel(0);
     }
@@ -58,7 +55,7 @@ export default function PhoneInput({ value, onChangeText, error }: PhoneInputPro
               inputRange: [0, 1],
               outputRange: [16, 12],
             }),
-            color: isFocused ? "#007AFF" : "#888",
+            color: "#5E6488",
           },
         ]}
       >
@@ -84,10 +81,9 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     borderWidth: 1,
-    borderColor: "#B8BED0",
+    borderColor: "#5E6488",
     borderRadius: 12,
-    backgroundColor: "#F9FAFE",
-    height: 52,
+    height: 56,
     justifyContent: "center",
   },
 
