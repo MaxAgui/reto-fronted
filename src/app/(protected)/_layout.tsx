@@ -1,6 +1,6 @@
 import Stepper from "@/src/components/Stepper";
 import { router, Slot, usePathname } from "expo-router";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function PlanesLayout() {
   const pathname = usePathname();
@@ -20,10 +20,16 @@ export default function PlanesLayout() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <Stepper currentStep={currentStep} onBackPress={handleBackPress} />
 
       <Slot/>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

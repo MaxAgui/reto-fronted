@@ -1,7 +1,6 @@
 import { PlanItem } from "@/src/api/plans/plans.types";
 import { useAuth } from "@/src/context/AuthContext";
 import { router } from "expo-router";
-import { useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface PlanCardSliderProps {
@@ -20,15 +19,7 @@ const planIcons: { [key: string]: any } = {
 };
 
 export default function PlanCardSlider({ plans, loading, selectedOption }: PlanCardSliderProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const { setSelectedPlan } = useAuth();
-
-  const handleScroll = (event: any) => {
-    const index = Math.round(
-      event.nativeEvent.contentOffset.x / 300 // ancho de la card
-    );
-    setCurrentIndex(index);
-  };
 
   const handleSelectPlan = (plan: PlanItem) => {
     setSelectedPlan(plan);
@@ -57,18 +48,19 @@ export default function PlanCardSlider({ plans, loading, selectedOption }: PlanC
       <ScrollView
         horizontal
         pagingEnabled
-        onScroll={handleScroll}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16 }}
       >
         {plans.map((plan: PlanItem, index: number) => (
           <View key={index} style={styles.card}>
             {/* Title */}
             <View style={styles.headerRow}>
               <Text style={styles.planName}>{plan.name}</Text>
-              <Image 
-                source={planIcons[plan.name] || require("@/assets/icons/IcHomeLight.png")} 
-                style={styles.icon} 
+              <Image
+                source={planIcons[plan.name] || require("@/assets/icons/IcHomeLight.png")}
+                style={styles.icon}
+                resizeMode="contain"
               />
             </View>
 
@@ -81,11 +73,26 @@ export default function PlanCardSlider({ plans, loading, selectedOption }: PlanC
 
             {/* Description list */}
             <View>
-              {plan.description.map((item: string, i: number) => (
-                <View key={i} style={styles.bulletRow}>
-                  <Text style={styles.descText}>{item}</Text>
-                </View>
-              ))}
+              {plan.description.map((item: string, i: number) => {
+                const iconSources = [
+                  require("@/assets/icons/GlMedicalAttentionSolid.png"),
+                  require("@/assets/icons/GlLaptopSolid.png"),
+                  require("@/assets/icons/GlHospitalSolid.png")
+                ];
+                
+                return (
+                  <View key={i} style={styles.bulletRow}>
+                    {i < 3 && (
+                      <Image 
+                        source={iconSources[i]} 
+                        style={styles.bulletIcon}
+                        resizeMode="contain"
+                      />
+                    )}
+                    <Text style={styles.descText}>{item}</Text>
+                  </View>
+                );
+              })}
             </View>
 
             {/* Button */}
@@ -98,13 +105,6 @@ export default function PlanCardSlider({ plans, loading, selectedOption }: PlanC
           </View>
         ))}
       </ScrollView>
-
-      {/* Pagination */}
-      <View style={styles.pagination}>
-        <Text style={styles.pageText}>
-          {currentIndex + 1} / {plans.length}
-        </Text>
-      </View>
     </View>
   );
 }
@@ -116,10 +116,14 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 28,
     marginRight: 20,
-    shadowColor: "#2A2A44",
-    shadowOpacity: 0.2,
-    shadowRadius: 20,
-    elevation: 10,
+    shadowColor: "#AEACF3",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 8,
   },
   headerRow: {
     flexDirection: "row",
@@ -127,29 +131,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   planName: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "900",
-    color: "#1A1A1A",
+    color: "#141938",
+    flexShrink: 1,
+    flex: 1,
+    marginRight: 12,
   },
   icon: {
-    width: 36,
-    height: 36,
+    width: 56,
+    height: 56,
   },
   costLabel: {
     marginTop: 20,
     fontSize: 12,
-    color: "#7A7A7A",
+    color: "#7981B2",
     fontWeight: "900",
   },
   price: {
-    marginTop: 4,
+    marginTop: 2,
     fontSize: 20,
     fontWeight: "900",
-    color: "#1A1A1A",
+    color: "#141938",
   },
   divider: {
     height: 1,
-    backgroundColor: "#EFEFEF",
+    backgroundColor: "#D7DBF5",
     marginVertical: 24,
   },
   bulletRow: {
@@ -157,27 +164,27 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   bulletIcon: {
-    width: 18,
-    height: 18,
-    marginRight: 10,
+    width: 20,
+    height: 26,
+    marginRight: 12,
   },
   descText: {
     flex: 1,
-    fontSize: 14,
-    color: "#3A3A3A",
+    fontSize: 16,
+    color: "#141938",
     lineHeight: 20,
   },
   button: {
     marginTop: 20,
     paddingVertical: 14,
-    borderRadius: 12,
-    backgroundColor: "#EB004A",
+    borderRadius: 32,
+    backgroundColor: "#FF1C44",
     alignItems: "center",
   },
   buttonText: {
     color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "900",
+    fontSize: 18,
+    fontWeight: "700",
   },
   pagination: {
     marginTop: 8,

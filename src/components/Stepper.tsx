@@ -24,7 +24,6 @@ export default function Stepper({ currentStep, onBackPress }: Props) {
 
   return (
     <View style={styles.container}>
-      {/* Botón atrás */}
       <TouchableOpacity onPress={onBackPress}>
         <Image
           source={require("@/assets/icons/button-circle-icon.png")}
@@ -33,13 +32,10 @@ export default function Stepper({ currentStep, onBackPress }: Props) {
         />
       </TouchableOpacity>
 
-      {/* Paso + barra */}
-      <View style={styles.stepContainer}>
-        <Text style={styles.stepText}>PASO {currentStep} DE 2</Text>
+      <Text style={styles.stepText}>PASO {currentStep} DE 2</Text>
 
-        <View style={styles.progressBackground}>
-          <Animated.View style={[styles.progressBar, { width }]} />
-        </View>
+      <View style={styles.progressBackground}>
+        <Animated.View style={[styles.progressBar, { width }]} />
       </View>
     </View>
   );
@@ -51,33 +47,27 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
     borderBottomWidth: 1,
-    borderBottomColor: "#EEE",
-  },
-
-  stepContainer: {
-    flex: 1,
-    marginLeft: 16,
+    borderBottomColor: "#D7DBF5",
+    gap: 16,
   },
 
   stepText: {
     fontSize: 10,
-    fontWeight: "900",
-    color: "#333",
-    marginBottom: 4,
+    fontFamily: "br-sonoma-bold",
+    color: "#141938",
   },
 
   progressBackground: {
     height: 6,
-    width: "100%",
-    backgroundColor: "#E0E0E0",
+    flex: 1,
+    backgroundColor: "#D7DBF5",
     borderRadius: 20,
   },
 
   progressBar: {
     height: 6,
-    backgroundColor: "#4A3AFF",
+    backgroundColor: "#4F4FFF",
     borderRadius: 20,
   },
 });

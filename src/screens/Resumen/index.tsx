@@ -18,7 +18,7 @@ export default function ResumenScreen() {
   }, []);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ padding: 20 }}>
+    <ScrollView contentContainerStyle={{ padding: 20 }}>
       {/* TÍTULO */}
       <Text style={styles.title}>Resumen del seguro</Text>
 
@@ -76,9 +76,6 @@ export default function ResumenScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#F7F7FF",
-  },
   title: {
     fontSize: 32,
     fontWeight: "900",

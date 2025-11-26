@@ -1,6 +1,7 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import { AuthProvider } from "../context/AuthContext";
@@ -22,16 +23,24 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <Header />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={[{ flex: 1 }, styles.container]}>
+          <Header />
 
-        <Stack
-          screenOptions={{
-            headerShown: false, // Ocultamos el header nativo
-            contentStyle: { backgroundColor: "white" }
-          }}
-        />
+          <Stack
+            screenOptions={{
+              headerShown: false, // Ocultamos el header nativo
+              contentStyle: styles.container
+            }}
+          />
+        </View>
       </SafeAreaView>
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#fafbff"
+  }
+})
